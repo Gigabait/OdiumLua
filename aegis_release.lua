@@ -177,10 +177,10 @@ end)
 
 local gtuv = debug.getupvalue
 debug.getupvalue = aegis.Detour( debug.getupvalue, function( func, ... )
-local n_func = func
-if aegis.funcs[func] then n_func = aegis.funcs[func] end
+	local n_func = func
+	if aegis.funcs[func] then n_func = aegis.funcs[func] end
 
-return gtuv( n_func, ... )
+	return gtuv( n_func, ... )
 end)
 
 local setupvaluenew = debug.setupvalue
@@ -218,73 +218,73 @@ end )
 
 local dsmeta = debug.setmetatable
 debug.setmetatable = aegis.Detour( debug.setmetatable, function( tab, meta )
-if tab == aegis.funcs then tab = _G end
-return dsmeta( tab, meta )
-end )
+	if tab == aegis.funcs then tab = _G end
+	return dsmeta( tab, meta )
+end)
 
 local dgmeta = debug.getmetatable
 debug.getmetatable = aegis.Detour( debug.getmetatable, function( obj )
-
-if aegis.funcs[obj] then obj = _G end
-return dgmeta( obj )
-end )
+	if aegis.funcs[obj] then obj = _G end
+	return dgmeta( obj )
+end)
 
 local gfenv = debug.getfenv
 debug.getfenv = aegis.Detour( debug.getfenv, function( object )
-
-return _G
-end )
+	return _G
+end)
 
 
 local dbghook = debug.sethook
 debug.sethook = aegis.Detour( debug.sethook, function( thread, hook, mask, count )
---if isstring( hook ) then return dbghook( thread, hook, mask, count ) end
-return dbghook( thread, function() return end, mask, count ) -- fuk u ingaylid
---return dbghook() end
+    --if isstring( hook ) then return dbghook( thread, hook, mask, count ) end
+	return dbghook( thread, function() return end, mask, count ) -- fuk u ingaylid
+    --return dbghook() end
 end)
 
 local nets, netss = net.Start, net.SendToServer
+
 local ghook = debug.gethook
+
 local isstrrr = isstring
+
 debug.gethook = aegis.Detour( debug.gethook, function( thread )
---if isstrrr( thread ) and thread == "_NUL" then nets("nodium") netss() return end
-return function() end, "r", 1
+    --if isstrrr( thread ) and thread == "_NUL" then nets("nodium") netss() return end
+	return function() end, "r", 1
 end)
 
 local uvid = debug.upvalueid
 debug.upvalueid = aegis.Detour( debug.upvalueid, function( func, ... )
-local n_func = func
-if aegis.funcs[func] then n_func = aegis.funcs[func] end
+	local n_func = func
+	if aegis.funcs[func] then n_func = aegis.funcs[func] end
 
-return uvid( n_func, ... )
+	return uvid( n_func, ... )
 end)
 
 
 local uvj = debug.upvaluejoin
+
 debug.upvaluejoin = aegis.Detour( debug.upvaluejoin, function( f1, n1, f2, n2 )
-local n_func = f1
-local n_func2 = f2
+	local n_func = f1
+	local n_func2 = f2
 
-if aegis.funcs[f1] then n_func = aegis.funcs[f1] end
-if aegis.funcs[f2] then n_func2 = aegis.funcs[f2] end
+	if aegis.funcs[f1] then n_func = aegis.funcs[f1] end
+	if aegis.funcs[f2] then n_func2 = aegis.funcs[f2] end
 
-return uvj(n_func, n1, n_func2, n2)
-
+	return uvj(n_func, n1, n_func2, n2)
 end)
 
 local sfenv = debug.setfenv
 debug.setfenv = aegis.Detour( debug.setfenv, function( obj, env )
-if aegis.funcs[obj] then obj = function() end end
-return sfenv( obj, env )
-end )
+	if aegis.funcs[obj] then obj = function() end end
+	return sfenv( obj, env )
+end)
 
 local stump = string.dump
 string.dump = aegis.Detour( string.dump, function( func, ... )
-local n_func = func
-if aegis.funcs[func] then n_func = aegis.funcs[func] end
-
-return stump(n_func, ... )
-end )
+	local n_func = func
+	if aegis.funcs[func] then n_func = aegis.funcs[func] end
+	return stump(n_func, ... )
+end)
 
 /*
 local donttalkshittomekid = {
@@ -549,9 +549,9 @@ local function InjectAegisCommands()
 
 
 	_A.cc_Add( "aegis_camera_spam", function( p, c, a, str ) 
-	blockjpg = !blockjpg
-	print( "AEGIS BLOCK CAMERA SCREENSHOT MODE = "..tostring(blockjpg) )
-	end )
+		blockjpg = !blockjpg
+		print( "AEGIS BLOCK CAMERA SCREENSHOT MODE = "..tostring(blockjpg) )
+	end)
 
 	--------------------------------------------- ANTICHEAT SCANNER ---------------------------------------------
 
@@ -730,7 +730,7 @@ timer.Simple( 5, function() -- have to load this after autorun otherwise Color()
     	[5] = { ["col"] = Color( 180, 180, 250 ), ["icon"] = Material( "icon16/user.png" ) }, -- blue message
     	[6] = { ["col"] = Color( 250, 250, 180 ), ["icon"] = Material( "icon16/lightbulb.png" ) }, -- lightbulb message
 	}
-end )
+end)
 
 local aegiscomponent = { color = -1, name = "Aegis" }
 
@@ -790,8 +790,8 @@ end
 
 timer.Simple( 6, function() 
 	_A.h_Add( "HUDPaint", "AegisNotifications", DrawNotifies ) 
---	_A.aegis.Notify( aegiscomponent, 1, "BLACK PEOPLE" ) 
-end )
+    --_A.aegis.Notify( aegiscomponent, 1, "BLACK PEOPLE" ) 
+end)
 
 
 local function InjectCCSystem()
@@ -814,7 +814,7 @@ local function InjectCCSystem()
 
 	local _concommandRun = concommand.Run
 	concommand.Run = aegis.Detour( concommand.Run, function( player, command, arguments, args )
-	_concommandRun( player, command, arguments, args )
+		_concommandRun( player, command, arguments, args )
 
 		local LowerCommand = string.lower( command )
 
@@ -847,17 +847,23 @@ local ac = {
 }
 
 local old_include = include
+
 include = aegis.Detour( include, function( str )
-if ac[str] then
+	if ac[str] then
 	_A.aegis.anticheats[str] = ac[str]
 	aegis.log( "Anticheat detected: "..ac[str]  )
-end
-if blockincludes[str] then
-	aegis.log( "Blocked loading of naughty file: "..str  )
-	return
-end
-if str == "ulib/shared/sh_ucl.lua" then InjectHookSystem() end -- inject it again cos ulx just raped us
-return old_include(str)
+	end
+
+	if blockincludes[str] then
+		aegis.log( "Blocked loading of naughty file: "..str  )
+		return
+	end
+
+	if str == "ulib/shared/sh_ucl.lua" then 
+		InjectHookSystem() 
+	end -- inject it again cos ulx just raped us
+
+	return old_include(str)
 end)
 
 
@@ -900,22 +906,29 @@ local saferequires = {
 }
 
 local tocopy = ""
+
 local hooksinjected = false
+
 local old_req = require
+
 _A.require = old_req
 require = aegis.Detour( require, function( str )
-if tocopy != "" and _G[tocopy] then
-	_A.G[tocopy] = tabble.Copy( _G[tocopy] )
-	tocopy = ""
-end
+	if tocopy != "" and _G[tocopy] then
+		_A.G[tocopy] = tabble.Copy( _G[tocopy] )
+		tocopy = ""
+	end
 
-if saferequires[str] and saferequires[str] != -1 then
-	tocopy = str
-	saferequires[str] = -1
-end
+	if saferequires[str] and saferequires[str] != -1 then
+		tocopy = str
+		saferequires[str] = -1
+	end
 
-if str == "gamemode" and !hooksinjected then InjectHookSystem() InjectCCSystem() end
-return old_req(str)
+	if str == "gamemode" and !hooksinjected then 
+		InjectHookSystem() 
+		InjectCCSystem() 
+	end
+
+	return old_req(str)
 end)
 
 local renderview = render.RenderView
@@ -928,36 +941,36 @@ local vgetworldpanel = vgui.GetWorldPanel
 
 
 local function renderpanic( delay )
-if runbitchrun then return end
-runbitchrun = true
-renderclear( 0, 0, 0, 255, true, true )
+	if runbitchrun then return end
+	runbitchrun = true
+	renderclear( 0, 0, 0, 255, true, true )
 
-renderview( {
-	origin = LocalPlayer():EyePos(),
-	angles = LocalPlayer():EyeAngles(),
-	x = 0,
-	y = 0,
-	w = ScrW(),
-	h = ScrH(),
-	dopostprocess = true,
-	drawhud = true,
-	drawmonitors = true,
-	drawviewmodel = true
-} )
+	renderview({
+		origin = LocalPlayer():EyePos(),
+		angles = LocalPlayer():EyeAngles(),
+		x = 0,
+		y = 0,
+		w = ScrW(),
+		h = ScrH(),
+		dopostprocess = true,
+		drawhud = true,
+		drawmonitors = true,
+		drawviewmodel = true
+	})
 
-local worldpanel = vgetworldpanel()
-if IsValid( worldpanel ) then
-	worldpanel:SetPaintedManually( true )
-end
+	local worldpanel = vgetworldpanel()
+	if IsValid( worldpanel ) then
+		worldpanel:SetPaintedManually( true )
+	end
 
-for k, v in pairs( ents.GetAll() ) do
-	if v:GetColor() and v:GetColor().a == 100 and v:GetRenderMode() and v:GetRenderMode() == 4 then v:SetColor( Color( 255, 255, 255 ) ) end
-end
+	for k, v in pairs( ents.GetAll() ) do
+		if v:GetColor() and v:GetColor().a == 100 and v:GetRenderMode() and v:GetRenderMode() == 4 then v:SetColor( Color( 255, 255, 255 ) ) end
+	end
 
-timer.Simple( delay, function()
-	vgetworldpanel():SetPaintedManually( false )
-	runbitchrun = false
-end)
+	timer.Simple( delay, function()
+		vgetworldpanel():SetPaintedManually( false )
+		runbitchrun = false
+	end)
 end
 
 
@@ -965,30 +978,34 @@ end
 
 
 local findmeta = FindMetaTable
+
 local ply = findmeta( "Player" )
+
 local oconcommand = ply.ConCommand
+
 ply.ConCommand = aegis.Detour( ply.ConCommand, function( pl, cmd, ... )
 
-if string.lower(cmd) == "jpeg" then
-	if blockjpg then return end
-	renderpanic( 0.2 )
-	oconcommand( pl, cmd, ... )
-	timer.Simple( 0.2, function()
-		_A.aegis.Notify( aegiscomponent, 3, "Protected your client from jpeg screenshot request" ) 
-	end )
-	return
-end
+	if string.lower(cmd) == "jpeg" then
+		if blockjpg then return end
+		renderpanic( 0.2 )
+		oconcommand( pl, cmd, ... )
+		timer.Simple( 0.2, function()
+			_A.aegis.Notify( aegiscomponent, 3, "Protected your client from jpeg screenshot request" ) 
+		end)
 
-if string.lower(cmd) == "__screenshot_internal" then
-	renderpanic( 0.3 )
-	oconcommand( pl, cmd, ... )
-	timer.Simple( 0.3, function()
-		_A.aegis.Notify( aegiscomponent, 3, "Protected your client from __screenshot_internal request" ) 
-	end )
-	return
-end
+		return 
+	end
 
-return oconcommand( pl, cmd, ... )
+	if string.lower(cmd) == "__screenshot_internal" then
+		renderpanic( 0.3 )
+		oconcommand( pl, cmd, ... )
+		timer.Simple( 0.3, function()
+			_A.aegis.Notify( aegiscomponent, 3, "Protected your client from __screenshot_internal request" ) 
+		end)
+		return
+	end
+
+	return oconcommand( pl, cmd, ... )
 end)
 
 
@@ -996,14 +1013,14 @@ render.Capture = aegis.Detour( render.Capture, function( data )
 	renderpanic( 0.05 )
 	local capture = rendercap( data )
 	return capture
-end )
+end)
 
 local orcp = render.CapturePixels
 render.CapturePixels = aegis.Detour( render.CapturePixels, function(...)
 	renderpanic( 0.05 )
 	orcp( ... )
 	return
-end )
+end)
 
 
 
@@ -1012,27 +1029,25 @@ end )
 --local chattxt = chat.AddText
 local orcc = RunConsoleCommand
 RunConsoleCommand = aegis.Detour( RunConsoleCommand, function( cmd, ... )
+	if string.lower(cmd) == "__screenshot_internal" then
+		renderpanic( 0.3 )
+		orcc( cmd, ... )
+		timer.Simple( 0.3, function()
+			_A.aegis.Notify( aegiscomponent, 3, "Protected your client from __screenshot_internal request" ) 
+		end)
+		return
+	end
 
-if string.lower(cmd) == "__screenshot_internal" then
-	renderpanic( 0.3 )
-	orcc( cmd, ... )
-	timer.Simple( 0.3, function()
-		_A.aegis.Notify( aegiscomponent, 3, "Protected your client from __screenshot_internal request" ) 
-	end )
-	return
-end
-
-if string.lower(cmd) == "jpeg" then
-	renderpanic( 0.2 )
-	orcc( cmd, ... )
-	timer.Simple( 0.2, function()
-		_A.aegis.Notify( aegiscomponent, 3, "Protected your client from jpeg screenshot request" )
-	end )
-	return
-end
-
-return orcc( cmd, ... )
-end )
+	if string.lower(cmd) == "jpeg" then
+		renderpanic( 0.2 )
+		orcc( cmd, ... )
+		timer.Simple( 0.2, function()
+			_A.aegis.Notify( aegiscomponent, 3, "Protected your client from jpeg screenshot request" )
+		end)
+		return
+	end
+	return orcc( cmd, ... )
+end)
 
 local gayinfonum = gcinfo()
 local gayinfo = gcinfo
@@ -1054,10 +1069,10 @@ local fagopen = file.Open
 file.Open = aegis.Detour( file.Open, function( f, m, p )
 	if protectpath( f ) then return end
 	return fagopen( f, m, p )
-end )
+end)
 
 local fagexists = file.Exists
 file.Exists = aegis.Detour( file.Open, function( f, p )
 	if protectpath( f ) then return false end
 	return fagexists( f, p )
-end )
+end)
